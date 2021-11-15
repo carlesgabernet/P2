@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #include "vad.h"
+#include "pav_analysis.h"
 
 const float FRAME_TIME = 10.0F; /* in ms. */
 
@@ -42,7 +43,9 @@ Features compute_features(const float *x, int N) {
    * For the moment, compute random value between 0 and 1 
    */
   Features feat;
-  feat.zcr = feat.p = feat.am = (float) rand()/RAND_MAX;
+  feat.zcr = compute_zcr(x, N, 16000);
+  feat.p = compute_power(x, N);
+  feat.am = compute_am(x, N);  
   return feat;
 }
 
@@ -50,11 +53,20 @@ Features compute_features(const float *x, int N) {
  * TODO: Init the values of vad_data
  */
 
-VAD_DATA * vad_open(float rate) {
+VAD_DATA * vad_open(float rate, int number_init, int number_ms, int number_mv, float n_alpha1, float n_alpha2){
   VAD_DATA *vad_data = malloc(sizeof(VAD_DATA));
   vad_data->state = ST_INIT;
   vad_data->sampling_rate = rate;
-  vad_data->frame_length = rate * FRAME_TIME * 1e-3;
+  vad_data->frame_length = rate * FRAME_TIME * 1e-3; //Para cambiar la duracion de la ventana
+  vad_data->k0 = 0;
+  vad_data->k1 = 0;
+  vad_data->k2 = 0;
+  vad_data->alpha1 = n_alpha1;
+  vad_data->alpha2 = n_alpha2;
+  vad_data->counter_N = 0;
+  vad_data->counter_init = number_init;
+  vad_data->counter_ms = number_ms;
+  vad_data->counter_mv = number_mv;
   return vad_data;
 }
 
@@ -77,7 +89,7 @@ unsigned int vad_frame_size(VAD_DATA *vad_data) {
  * using a Finite State Automata
  */
 
-VAD_STATE vad(VAD_DATA *vad_data, float *x) {
+VAD_STATE vad(VAD_DATA *vad_data, float *x, float t) {
 
   /* 
    * TODO: You can change this, using your own features,
@@ -89,17 +101,45 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x) {
 
   switch (vad_data->state) {
   case ST_INIT:
-    vad_data->state = ST_SILENCE;
+   if(vad_data->counter_N < vad_data->counter_init){
+      vad_data->counter_N ++;
+      vad_data->k0 += pow(10, f.p/10);
+
+    }else{
+      vad_data->state = ST_SILENCE;
+      vad_data->k0 = 10*log10(vad_data->k0/vad_data->counter_N);
+      vad_data->k1 = vad_data->k0 + vad_data->alpha1;
+      vad_data->k2 = vad_data->k1 + vad_data->alpha2;
+      vad_data->counter_N = 0;
+    ]
     break;
 
   case ST_SILENCE:
-    if (f.p > 0.95)
-      vad_data->state = ST_VOICE;
+    if (f.p > vad_data->k1)
+      vad_data->state = ST_MV;
     break;
 
   case ST_VOICE:
-    if (f.p < 0.01)
+    if (f.p < vad_data->k2)
+      vad_data->state = ST_MS;
+    break;
+
+  case ST_MS:
+    //printf("Llevo %u tramas en MS\n", vad_data->counter_N);
+    //printf("ZCR en MS: %f\n", f.zcr);
+    if(f.p > vad_data->k2 && vad_data->counter_N < vad_data->counter_ms){
+      vad_data->state = ST_VOICE;
+      vad_data->counter_N = 0;
+      //printf("De MS me voy a V\n");
+    }else if(vad_data->counter_N == vad_data->counter_ms){
+      //printf("He llegado al máximo de MS\n");
       vad_data->state = ST_SILENCE;
+      vad_data->counter_N = 0;
+      //printf("De MS me voy a S\n");
+    }else {
+      vad_data->counter_N ++;
+      //printf("Sigo MS\n");
+    }
     break;
 
   case ST_UNDEF:
@@ -109,8 +149,11 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x) {
   if (vad_data->state == ST_SILENCE ||
       vad_data->state == ST_VOICE)
     return vad_data->state;
-  else
+  else if(vas_data->state == ST_INIT){
+    return ST_SILENCE
+  }else{
     return ST_UNDEF;
+  }  
 }
 
 void vad_show_state(const VAD_DATA *vad_data, FILE *out) {
