@@ -80,6 +80,7 @@ Para cargar los ficheros en su ordenador personal debe seguir los pasos siguient
 Entrega de la práctica.
 -----------------------
 
+
 Responda, en este mismo documento (README.md), los ejercicios indicados a continuación. Este documento es
 un fichero de texto escrito con un formato denominado _**markdown**_. La principal característica de este
 formato es que, manteniendo la legibilidad cuando se visualiza con herramientas en modo texto (`more`,
