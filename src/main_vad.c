@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
   unsigned int t, last_t; /* in frames */
 
   char	*input_wav, *output_vad, *output_wav;
-  unsigned int number_inits, number_ms, number_mv;
+  unsigned int number_init, number_ms, number_mv;
  
 
   DocoptArgs args = docopt(argc, argv, /* help */ 1, /* version */ "2.0");
@@ -34,6 +34,7 @@ int main(int argc, char *argv[]) {
   float n_alpha2 = atof(args.n_alpha2);
   number_ms = atoi(args.number_ms);
   number_mv = atoi(args.number_mv);
+  number_init = atoi(args.number_init);
 
   verbose    = args.verbose ? DEBUG_VAD : 0;
   input_wav  = args.input_wav;
@@ -71,7 +72,7 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  vad_data = vad_open(sf_info.samplerate, alpha0, alpha1, alpha2, time);
+  vad_data = vad_open(sf_info.samplerate, number_init, number_ms, number_mv, n_alpha1, n_alpha2);
   /* Allocate memory for buffers */
   frame_size   = vad_frame_size(vad_data);
   buffer       = (float *) malloc(frame_size * sizeof(float));
@@ -85,7 +86,7 @@ int main(int argc, char *argv[]) {
     /* End loop when file has finished (or there is an error) */
     if  ((n_read = sf_read_float(sndfile_in, buffer, frame_size)) != frame_size) break;
 
-    state = vad(vad_data, buffer, t * frame_d);
+    state = vad(vad_data, buffer, t * frame_duration);
     if (verbose & DEBUG_VAD){
       vad_show_state(vad_data, stdout);
     }

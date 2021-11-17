@@ -111,7 +111,7 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x, float t) {
       vad_data->k1 = vad_data->k0 + vad_data->alpha1;
       vad_data->k2 = vad_data->k1 + vad_data->alpha2;
       vad_data->counter_N = 0;
-    ]
+    }
     break;
 
   case ST_SILENCE:
@@ -149,8 +149,8 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x, float t) {
   if (vad_data->state == ST_SILENCE ||
       vad_data->state == ST_VOICE)
     return vad_data->state;
-  else if(vas_data->state == ST_INIT){
-    return ST_SILENCE
+  else if(vad_data->state == ST_INIT){
+    return ST_SILENCE;
   }else{
     return ST_UNDEF;
   }  

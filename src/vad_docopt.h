@@ -282,7 +282,7 @@ int elems_to_args(Elements *elements, DocoptArgs *args, bool help,
             args->version = option->value;
         } else if (!strcmp(option->olong, "--alpha1")) {
             if (option->argument)
-                args->alpha1 = option->argument;
+                args->n_alpha1 = option->argument;
         } else if (!strcmp(option->olong, "--input-wav")) {
             if (option->argument)
                 args->input_wav = option->argument;
