@@ -33,7 +33,7 @@ const char help_message[] =
 "VAD - Voice Activity Detector\n"
 "\n"
 "Usage:\n"
-"   vad [options] -i <input-wav> -o <output-vad> [-w <output-wav>]\n"
+"   vad [options] -N <number-init> -s <number-ms> -m <number-mv> -a <n-alpha1> -b <n-alpha2> -i <input-wav> -o <output-vad> [-w <output-wav>]\n"
 "   vad (-h | --help)\n"
 "   vad --version\n"
 "\n"
@@ -53,7 +53,7 @@ const char help_message[] =
 
 const char usage_pattern[] =
 "Usage:\n"
-"   vad [options] -i <input-wav> -o <output-vad> [-w <output-wav>]\n"
+"   vad [options] -N <number-init> -s <number-ms> -m <number-mv> -a <n-alpha1> -b <n-alpha2> -i <input-wav> -o <output-vad> [-w <output-wav>]\n"
 "   vad (-h | --help)\n"
 "   vad --version";
 
@@ -280,12 +280,24 @@ int elems_to_args(Elements *elements, DocoptArgs *args, bool help,
             args->verbose = option->value;
         } else if (!strcmp(option->olong, "--version")) {
             args->version = option->value;
-        } else if (!strcmp(option->olong, "--alpha1")) {
-            if (option->argument)
-                args->n_alpha1 = option->argument;
         } else if (!strcmp(option->olong, "--input-wav")) {
             if (option->argument)
                 args->input_wav = option->argument;
+        } else if (!strcmp(option->olong, "--n-alpha1")) {
+            if (option->argument)
+                args->n_alpha1 = option->argument;
+        } else if (!strcmp(option->olong, "--n-alpha2")) {
+            if (option->argument)
+                args->n_alpha2 = option->argument;
+        } else if (!strcmp(option->olong, "--number-init")) {
+            if (option->argument)
+                args->number_init = option->argument;
+        } else if (!strcmp(option->olong, "--number-ms")) {
+            if (option->argument)
+                args->number_ms = option->argument;
+        } else if (!strcmp(option->olong, "--number-mv")) {
+            if (option->argument)
+                args->number_mv = option->argument;
         } else if (!strcmp(option->olong, "--output-vad")) {
             if (option->argument)
                 args->output_vad = option->argument;
@@ -312,7 +324,7 @@ int elems_to_args(Elements *elements, DocoptArgs *args, bool help,
 
 DocoptArgs docopt(int argc, char *argv[], bool help, const char *version) {
     DocoptArgs args = {
-        0, 0, 0, (char*) "10", NULL, NULL, NULL,
+        0, 0, 0, NULL, (char*) "2", (char*) "7.3", (char*) "11", (char*) "12",
         usage_pattern, help_message
     };
     Tokens ts;

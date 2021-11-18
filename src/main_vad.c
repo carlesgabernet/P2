@@ -25,21 +25,26 @@ int main(int argc, char *argv[]) {
   unsigned int t, last_t; /* in frames */
 
   char	*input_wav, *output_vad, *output_wav;
-  unsigned int number_init, number_ms, number_mv;
+  unsigned int number_init;
+  unsigned int number_ms;
+  unsigned int number_mv;
+
+  float n_alpha1;
+  float n_alpha2;
  
 
   DocoptArgs args = docopt(argc, argv, /* help */ 1, /* version */ "2.0");
 
-  float n_alpha1 = atof(args.n_alpha1);
-  float n_alpha2 = atof(args.n_alpha2);
-  number_ms = atoi(args.number_ms);
-  number_mv = atoi(args.number_mv);
-  number_init = atoi(args.number_init);
-
   verbose    = args.verbose ? DEBUG_VAD : 0;
   input_wav  = args.input_wav;
   output_vad = args.output_vad;
-  output_wav = args.output_wav;
+  output_wav = args.output_wav;  
+
+  number_ms = atoi(args.number_ms);
+  number_mv = atoi(args.number_mv);
+  number_init = atoi(args.number_init);
+  n_alpha1 = atof(args.n_alpha1);
+  n_alpha2 = atof(args.n_alpha2);
 
 
   if (input_wav == 0 || output_vad == 0) {
@@ -87,9 +92,8 @@ int main(int argc, char *argv[]) {
     if  ((n_read = sf_read_float(sndfile_in, buffer, frame_size)) != frame_size) break;
 
     state = vad(vad_data, buffer, t * frame_duration);
-    if (verbose & DEBUG_VAD){
-      vad_show_state(vad_data, stdout);
-    }
+    if (verbose & DEBUG_VAD) vad_show_state(vad_data, stdout);
+    
 
     if (sndfile_out != 0 && state != ST_SILENCE) {
       sf_write_float(sndfile_out, buffer, frame_size);
@@ -124,7 +128,6 @@ int main(int argc, char *argv[]) {
   free(buffer_zeros);
   sf_close(sndfile_in);
   fclose(vadfile);
-  if (sndfile_out) 
-    sf_close(sndfile_out);
+  if (sndfile_out) sf_close(sndfile_out);
   return 0;
 }
