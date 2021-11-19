@@ -106,16 +106,25 @@ Ejercicios
   continuación, una captura de `wavesurfer` en la que se vea con claridad la señal temporal, el contorno de
   potencia y la tasa de cruces por cero, junto con el etiquetado manual de los segmentos.
   
-  
+  ![image](https://user-images.githubusercontent.com/91891304/142669136-2062b15c-f355-4f90-b356-ecbb6daca13f.png)
 
 - A la vista de la gráfica, indique qué valores considera adecuados para las magnitudes siguientes:
 
 	* Incremento del nivel potencia en dB, respecto al nivel correspondiente al silencio inicial, para
 	  estar seguros de que un segmento de señal se corresponde con voz.
+	  
+	  Para estar seguros de que un tramo de señal corresponde con voz, el incremento de nivel de potencia será de unos 25 dB.
 
 	* Duración mínima razonable de los segmentos de voz y silencio.
+	
+	![image](https://user-images.githubusercontent.com/91891304/142669180-5588ee85-ddde-4e36-9d43-f00eae8d99b6.png)
+	
+	  Los segmentos de voz tienen una duración mínima de 10,78 - 10,68 = 100ms.
+	  Los segmentos de silencio de menos de 15,69 - 15,67 = 20ms.
 
 	* ¿Es capaz de sacar alguna conclusión a partir de la evolución de la tasa de cruces por cero?
+	
+	  Si, la tasa de cruces por cero de las tramas de ruido es considerablemente mayor a la tasa de cruces de las tramas de voz.
 
 
 ### Desarrollo del detector de actividad vocal
@@ -126,13 +135,20 @@ Ejercicios
 - Inserte una gráfica en la que se vea con claridad la señal temporal, el etiquetado manual y la detección
   automática conseguida para el fichero grabado al efecto. 
 
+  ![image](https://user-images.githubusercontent.com/91891304/142669291-48c9ce45-5af6-443c-a59c-d2027b1f0050.png)
 
 - Explique, si existen. las discrepancias entre el etiquetado manual y la detección automática.
+
+  Podemos observar las siguientes diferencias:
+  	· El patrón al que asimilarse generado por el programa y el patrón del etiquetado manual. A simple vista, podría parecer que los dos realizan la tarea asignada a la 		perfección.
+	· Las etiquetas de detección automática de los segmentos de voz están bien ubicadas, pero en los segmentos de silencio vemos que se alterna entre etiquetas de voz y 		silencio.
 
 - Evalúe los resultados sobre la base de datos `db.v4` con el script `vad_evaluation.pl` e inserte a 
   continuación las tasas de sensibilidad (*recall*) y precisión para el conjunto de la base de datos (sólo
   el resumen).
 
+	![image](https://user-images.githubusercontent.com/91891304/142669476-24e5536c-7750-49cb-914b-93823e88ef4c.png)
+	
 
 ### Trabajos de ampliación
 
@@ -146,7 +162,9 @@ Ejercicios
 
 - Si ha usado `docopt_c` para realizar la gestión de las opciones y argumentos del programa `vad`, inserte
   una captura de pantalla en la que se vea el mensaje de ayuda del programa.
-
+  
+  ![image](https://user-images.githubusercontent.com/91891304/142669517-8df333cc-cbdf-4b2d-a335-6a1484728ccd.png)
+  
 
 ### Contribuciones adicionales y/o comentarios acerca de la práctica
 
