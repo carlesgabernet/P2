@@ -6,7 +6,7 @@
 # Write here the name and path of your program and database
 DIR_P2=$HOME/PAV/P2
 DB=$DIR_P2/db.v4
-CMD="$DIR_P2/bin/vad  -N 10 -s 8 -m 5 -a 3 -b 7"
+CMD="$DIR_P2/bin/vad  -N 11 -s 7 -m 5 -a 3 -b 8"
 
 for filewav in $DB/*/*wav; do
 #    echo
