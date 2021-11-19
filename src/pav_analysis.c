@@ -10,19 +10,19 @@ float compute_power(const float *x, unsigned int N) {
         sum = sum + (x[i]*x[i]);
     }
 
-    float p = 10 * log10(sum/N);
-    return p;
+    float power = 10 * log10(sum/N);
+    return power;
 }
     
 
 float compute_am(const float *x, unsigned int N) {
-    float sum = 0;
+    float am = 0;
 
     for(int n = 0; n < N; n++) {
-        sum += fabs(x[n]);
+        am += fabs(x[n]);
     }
 
-    return sum;  
+    return am;  
 }
 
 float compute_zcr(const float *x, unsigned int N, float fm) {

@@ -9,11 +9,11 @@ Options:
    -i FILE, --input-wav=FILE   WAVE file for voice activity detection
    -o FILE, --output-vad=FILE  Label file with the result of VAD
    -w FILE, --output-wav=FILE  WAVE file with silences cleared
-   -N INT, --number-init=INT  Number of init frames [default: 11]
-   -s INT, --number-ms=INT  Number of frames in MS [default: 12]
+   -N INT, --number-init=INT  Number of init frames [default: 12]
+   -s INT, --number-ms=INT  Number of frames in MS [default: 8]
    -m INT, --number-mv=INT  Number of frames in MV [default: 5]
-   -a FLOAT, --n-alpha1=FLOAT  Value of alpha1 [default: 2]
-   -b FLOAT, --n-alpha2=FLOAT  Value of alpha2 [default: 7.3]
+   -a FLOAT, --n-alpha1=FLOAT  Value of alpha1 [default: 3]
+   -b FLOAT, --n-alpha2=FLOAT  Value of alpha2 [default: 7]
    -v, --verbose  Show debug information
    -h, --help     Show this screen
    --version      Show the version of the project
